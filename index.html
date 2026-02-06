@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Question... ✨</title>
+    <style>
+        /* --- The Romantic Palette --- */
+        :root {
+            --blush: #ffb3c1;
+            --rose: #ff4d6d;
+            --lavender: #e2e2ff;
+            --cream: #fffcf2;
+            --text: #5e3023;
+        }
+
+        /* --- Base Styles --- */
+        * { box-sizing: border-box; }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--cream), var(--blush), var(--lavender));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Floating Elements --- */
+        .floating-heart {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatUp 6s linear infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) scale(0.5); opacity: 0; }
+            20% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- The Card --- */
+        .card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            padding: 3rem 2rem;
+            border-radius: 40px;
+            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.15);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            z-index: 10;
+            border: 2px solid white;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--rose);
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* --- Interactive Buttons --- */
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        #yes-btn {
+            background-color: var(--rose);
+            color: white;
+        }
+
+        #yes-btn:hover {
+            transform: scale(1.1);
+            background-color: #ff758f;
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.3);
+        }
+
+        #no-btn {
+            background-color: white;
+            color: #999;
+        }
+
+        #no-btn:hover {
+            background-color: #fff0f3;
+            color: var(--rose);
+        }
+
+        /* --- States --- */
+        .hidden { display: none; }
+        
+        .celebration-icon {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="heart-spawn"></div>
+
+    <div class="card" id="main-card">
+        <div id="step-question">
+            <h1>Hey you… 💕</h1>
+            <p>I was wondering if you’d like to make this Valentine’s Day a little more special with me 🌸</p>
+            <div class="btn-container">
+                <button class="btn" id="yes-btn" onclick="handleYes()">Yes 💖</button>
+                <button class="btn" id="no-btn" onclick="handleNo()">No 😢</button>
+            </div>
+        </div>
+
+        <div id="step-redirect" class="hidden">
+            <h1>Hmm... 💕</h1>
+            <p>That doesn't feel quite right. I think your heart might be trying to say something else...</p>
+            <div class="btn-container">
+                <button class="btn" id="yes-btn-2" onclick="handleYes()">Yes 💖</button>
+            </div>
+        </div>
+
+        <div id="step-success" class="hidden">
+            <span class="celebration-icon">💘</span>
+            <h1>It's a Date!</h1>
+            <p>Yay! I’m already smiling thinking about our Valentine’s date. You just made my day ✨</p>
+        </div>
+    </div>
+
+    <script>
+        // 1. Create the atmosphere with floating hearts
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('floating-heart');
+            const icons = ['💗', '✨', '🌸', '💕', '☁️'];
+            heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+            heart.style.fontSize = (Math.random() * 20 + 10) + "px";
+            document.getElementById('heart-spawn').appendChild(heart);
+            
+            setTimeout(() => { heart.remove(); }, 6000);
+        }
+        setInterval(createHeart, 400);
+
+        // 2. Logic: Handle the "No" click
+        function handleNo() {
+            const card = document.getElementById('main-card');
+            // Add a soft shake effect
+            card.style.transform = "translateX(10px)";
+            setTimeout(() => card.style.transform = "translateX(-10px)", 100);
+            setTimeout(() => card.style.transform = "translateX(0)", 200);
+
+            // Gently switch to the redirect state
+            setTimeout(() => {
+                document.getElementById('step-question').classList.add('hidden');
+                document.getElementById('step-redirect').classList.remove('hidden');
+            }, 300);
+        }
+
+        // 3. Logic: Handle the "Yes" click
+        function handleYes() {
+            document.getElementById('step-question').classList.add('hidden');
+            document.getElementById('step-redirect').classList.add('hidden');
+            document.getElementById('step-success').classList.remove('hidden');
+            
+            // Intensify the magic
+            for(let i=0; i<40; i++) {
+                setTimeout(createHeart, i * 100);
+            }
+        }
+    </script>
+</body>
+</html>
